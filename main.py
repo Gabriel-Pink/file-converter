@@ -2,14 +2,20 @@ import os
 from container import Container
 
 def main():
-    # Contêiner de dependências
+    
     container = Container()
     converter = container.tif_to_pdf_converter()
+    dir_root = "C:\\Users\\Gabriel\\Desktop\\DocumentosAlunos\\"
+    dir_destionation = "C:\\Users\\Gabriel\\Desktop\\converttopdf\\"
 
-    input_file = "C:\\Users\\Gabriel\\Desktop\\DocumentosAlunos\\00090698010 - Rafael Rogerio Sanagiotto 001.tif"
-    output_file = "C:\\Users\\Gabriel\\Documents\\format_file\\saida.pdf"
+    def listar_tif(dir):
+        return [f for f in os.listdir(dir) if f.lower().endswith(".tif")]
 
-    converter.convert(input_file, output_file)
+    arquivos_tif = listar_tif(dir_root)
+
+    for file in arquivos_tif:
+        converter.convert(f"{dir_root}{file}", f"{dir_destionation}{file.replace(".tif", ".pdf")}")
+
     
     print(f"[-+-] Execução finalizada [-+-]")
 

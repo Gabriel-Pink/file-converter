@@ -16,13 +16,12 @@ class TifToPdfConverter(FileConverter):
         pdf = FPDF()
         pdf.set_auto_page_break(auto=True, margin=15)
 
-        teste = 0
-
         # Verificar se a imagem TIF possui múltiplas páginas (múltiplos frames)
         if image.is_animated:
+
             for i in range(image.n_frames):
                 image.seek(i)
-                
+
                 # Converte para RGB e garante que o fundo transparente (se houver) seja branco
                 rgb_image = image.convert('RGB')
 
@@ -33,17 +32,16 @@ class TifToPdfConverter(FileConverter):
                     background.paste(rgb_image, (0, 0), rgb_image)
                     rgb_image = background
                 
-                # Salvar a imagem convertida como PNG temporariamente
-                temp_image_path = f"temp_image{teste}.png"
-                rgb_image.save(temp_image_path, 'PNG')
+                temp_image_path = f"temp_image_path_{i}.png"
 
-                teste = teste + 1
+                # Salvar a imagem convertida como PNG temporariamente
+                rgb_image.save(temp_image_path, 'PNG')
 
                 pdf.add_page()
                 pdf.image(temp_image_path, x=10, y=10, w=180)  # Adicionar imagem ao PDF
 
-                # Remover o arquivo temporário
-                # os.remove(temp_image_path)
+            for i in range(image.n_frames):
+                os.remove(f"temp_image_path_{i}.png")
         else:
             # Para um único frame (imagem estática)
             rgb_image = image.convert('RGB')
